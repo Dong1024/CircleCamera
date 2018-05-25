@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!--拍摄圆形view-->
+    <declare-styleable name="CircleCameraLayout">
+        <attr name="circle_camera_width" format="dimension" />
+        <attr name="circle_camera_height" format="dimension" />
+        <attr name="border_width" format="dimension" />
+    </declare-styleable>
+
+
+
+</resources>
