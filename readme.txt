@@ -3,5 +3,4 @@
 2、平板摄像不规则分辨率下预览能够正常显示。
 
 
-![image](https://github.com/itmyhome2013/readme_add_pic/raw/master/images/nongshalie.jpg)
 ![image](https://github.com/Dong1024/CircleCamera/blob/master/image/20180525184119.png)
