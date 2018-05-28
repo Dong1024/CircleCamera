@@ -1,15 +1,22 @@
 package com.dong.circlecamera.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.Outline;
+import android.graphics.Rect;
 import android.hardware.Camera;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
@@ -111,13 +118,14 @@ public class CircleCameraLayout extends RelativeLayout {
         timer.schedule(pressTask, 50);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void show() {
         //cmaera根view--layout
         RelativeLayout cameraRoot = new RelativeLayout(mContext);
         RelativeLayout.LayoutParams rootParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rootParams.addRule(CENTER_IN_PARENT, TRUE);
-        cameraRoot.setBackgroundColor(Color.WHITE);
+        cameraRoot.setBackgroundColor(Color.TRANSPARENT);
         cameraRoot.setClipChildren(false);
 
 
@@ -130,14 +138,16 @@ public class CircleCameraLayout extends RelativeLayout {
         cameraLayout.setLayoutParams(cameraParams);
         cameraLayout.addView(cameraPreview);
 
+        cameraLayout.setOutlineProvider(viewOutlineProvider);//把自定义的轮廓提供者设置给imageView
+        cameraLayout.setClipToOutline(true);//开启裁剪
+
         //circleView--layout
 //        CircleView circleView = new CircleView(mContext);
         CircleView2 circleView = new CircleView2(mContext);
-        circleView.setLayoutParams(cameraParams);
-        circleView.setBorderWidth(cameraHeight, borderWidth);
+        circleView.setBorderWidth(circleWidth, borderWidth);
 
         //设置margin值---隐藏超出部分布局
-        int margin = (cameraHeight - circleWidth) / 2 + borderWidth;
+        int margin = (cameraHeight - circleWidth) / 2 - borderWidth / 2;
         rootParams.setMargins(0, -margin, 0, -margin);
         cameraRoot.setLayoutParams(rootParams);
 
@@ -145,8 +155,22 @@ public class CircleCameraLayout extends RelativeLayout {
         cameraRoot.addView(cameraLayout);
         //添加circle
         cameraRoot.addView(circleView);
-
+        //添加根布局
         this.addView(cameraRoot);
     }
+
+    //自定义一个轮廓提供者
+    public ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+        @Override
+        public void getOutline(View view, Outline outline) {
+            //裁剪成一个圆形
+            int left0 = 0;
+            int top0 = (view.getHeight() - view.getWidth()) / 2;
+            int right0 = view.getWidth();
+            int bottom0 = (view.getHeight() - view.getWidth()) / 2 + view.getWidth();
+            outline.setOval(left0, top0, right0, bottom0);
+        }
+    };
 
 }

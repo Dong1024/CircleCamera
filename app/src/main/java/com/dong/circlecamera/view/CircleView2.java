@@ -20,7 +20,7 @@ import com.dong.circlecamera.R;
 
 /**
  * Created by dong on 2018/5/23.
- * 另一各实现圆形边框
+ * kl
  */
 
 public class CircleView2 extends View {
@@ -41,27 +41,22 @@ public class CircleView2 extends View {
     }
 
     private Paint paint;
-    private Paint borderPaint;
     private int borderWidth;
+    private RectF rectF;
 
     /**
-     * @param viewHeight  需要指定view的高度
+     * @param circleWidth 指定view宽高
      * @param borderWidth 边框宽度
      */
-    public void setBorderWidth(int viewHeight, int borderWidth) {
+    public void setBorderWidth(int circleWidth, int borderWidth) {
         this.borderWidth = borderWidth;
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
-        params.height = viewHeight + borderWidth * 2;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(circleWidth, circleWidth + borderWidth * 2);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        setLayoutParams(params);
     }
 
     private void init() {
-        setBackgroundColor(Color.WHITE);
-        //圆开透明视图
-        borderPaint = new Paint();
-        borderPaint.setColor(Color.TRANSPARENT);
-        borderPaint.setStyle(Paint.Style.FILL);
-        borderPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
-
+        setBackgroundColor(Color.TRANSPARENT);
         //圆形边框
         int borderColor = getResources().getColor(R.color.colorAccent);
         paint = new Paint();
@@ -74,14 +69,14 @@ public class CircleView2 extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, borderPaint);
         if (borderWidth != 0) {
             paint.setStrokeWidth(borderWidth);
             int left = borderWidth / 2;
             int top = (getHeight() - (getWidth())) / 2 + borderWidth / 2;
             int right = getWidth() - borderWidth / 2;
             int bottom = (getHeight() - getWidth()) / 2 + getWidth() - borderWidth / 2;
-            RectF rectF = new RectF(left, top, right, bottom);
+
+            if (null == rectF) rectF = new RectF(left, top, right, bottom);
             canvas.drawArc(rectF, 0, 360, false, paint);
         }
     }

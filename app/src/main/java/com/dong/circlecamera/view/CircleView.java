@@ -37,76 +37,41 @@ public class CircleView extends View {
         init();
     }
 
-    private Paint paint;
     private Paint borderPaint;
     private int borderWidth;
 
     /**
-     * @param viewHeight  需要指定view的高度
+     * @param circleWidth 指定view宽高
      * @param borderWidth 边框宽度
      */
-    public void setBorderWidth(int viewHeight, int borderWidth) {
+    public void setBorderWidth(int circleWidth, int borderWidth) {
         this.borderWidth = borderWidth;
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) getLayoutParams();
-        params.height = viewHeight + borderWidth * 2;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(circleWidth, circleWidth + borderWidth * 2);
+        params.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        setLayoutParams(params);
     }
 
     private void init() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            int borderColor = getResources().getColor(R.color.colorAccent);
-            setBackgroundColor(Color.TRANSPARENT);
-
-            paint = new Paint();
-            paint.setColor(Color.WHITE);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            paint.setAntiAlias(true);//抗锯齿
-            paint.setDither(true);//防抖动
-
+        int borderColor = getResources().getColor(R.color.colorAccent);
+        if (null == borderPaint){
             borderPaint = new Paint();
             borderPaint.setColor(borderColor);
             borderPaint.setStyle(Paint.Style.STROKE);
             borderPaint.setAntiAlias(true);//抗锯齿
             borderPaint.setDither(true);//防抖动
-
-        } else {
-            int borderColor = getResources().getColor(R.color.colorAccent);
-            setBackgroundColor(Color.WHITE);
-            paint = new Paint();
-            paint.setColor(Color.TRANSPARENT);
-            paint.setStyle(Paint.Style.FILL_AND_STROKE);
-            paint.setAntiAlias(true);//抗锯齿
-            paint.setDither(true);//防抖动
-            paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-
-            borderPaint = new Paint();
-            borderPaint.setColor(borderColor);
-            borderPaint.setStyle(Paint.Style.FILL);
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //画圆形
-            Path pathRect = new Path();
-            pathRect.addRect(0, 0, getWidth(), getHeight(), Path.Direction.CCW);
-            Path pathCircle = new Path();
-            pathCircle.addCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - borderWidth, Path.Direction.CCW);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                pathRect.op(pathCircle, Path.Op.DIFFERENCE);
-            }
-            canvas.drawPath(pathRect, paint);
-            //画边框
-            if (borderWidth != 0) {
-                borderPaint.setStrokeWidth(borderWidth);
-                canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - borderWidth / 2, borderPaint);
-            }
-        } else {
-            if (borderWidth != 0) {
-                canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, borderPaint);
-            }
-            canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2 - borderWidth, paint);
+        //画边框
+        if (borderWidth != 0) {
+            borderPaint.setStrokeWidth(borderWidth);
+            float x = getWidth() / 2.0F;
+            float y = getHeight() / 2.0F;
+            float radius = getWidth() / 2.0F - borderWidth / 2.0F + 1;
+            canvas.drawCircle(x, y, radius, borderPaint);
         }
     }
 
