@@ -131,7 +131,8 @@ public class CircleCameraLayout extends RelativeLayout {
         cameraLayout.addView(cameraPreview);
 
         //circleView--layout
-        CircleView circleView = new CircleView(mContext);
+//        CircleView circleView = new CircleView(mContext);
+        CircleView2 circleView = new CircleView2(mContext);
         circleView.setLayoutParams(cameraParams);
         circleView.setBorderWidth(cameraHeight, borderWidth);
 
